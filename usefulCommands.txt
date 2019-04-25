@@ -1,0 +1,2 @@
+Install something via NPM
+docker run --rm -it --name tmpnode -w /var/www/app -v $(pwd):/var/www/app  node:8-alpine npm i -s <packagename>

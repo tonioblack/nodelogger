@@ -1,0 +1,44 @@
+version: "3.3"
+services: 
+
+  mongo:
+    image: mongo
+    restart: always
+    networks: 
+      - nodelogger
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes: 
+      - "./db:/data/db"
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    networks: 
+      - nodelogger
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: 'admin'
+      ME_CONFIG_BASICAUTH_PASSWORD:  'admin'
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+
+  api:
+    image: node:8-alpine
+    restart: always
+    command: npm start
+    working_dir: /var/www/app
+    networks: 
+      - nodelogger
+    volumes:
+      - .:/var/www/app
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    depends_on:
+      - mongo
+
+networks: 
+  nodelogger:

@@ -1,0 +1,26 @@
+version: "3.3"
+services: 
+
+  mongo:
+    image: mongo
+    networks: 
+      - nodetest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  api:
+    image: node:8-alpine
+    command: npm test
+    working_dir: /var/www/app
+    networks: 
+      - nodetest
+    environment:
+      PORT: 4000
+    volumes:
+      - .:/var/www/app
+    depends_on:
+      - mongo
+
+networks: 
+  nodetest:
